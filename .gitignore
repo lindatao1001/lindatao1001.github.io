@@ -1,9 +1,10 @@
-# 白名单模式：仓库只发布脱敏版单文件页面
-# 其余所有文件（原始照片、旧版页面、文案草稿、工作区文件）一律不推送
+# 白名单模式：只发布脱敏版页面
+# 完整版本地文件 index.html、原始照片、文案草稿一律不推送
 *
+!*/
 !/index0.html
-!/index.html
 !/README.md
 !/.gitignore
-!/.nojekyll
 !/.gitattributes
+!/docs/
+!/docs/**

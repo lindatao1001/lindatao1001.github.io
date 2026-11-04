@@ -10,12 +10,13 @@
 
 | 文件 | 作用 |
 |---|---|
-| `index.html` | GitHub Pages 根入口，内容与 `index0.html` 逐字节相同 |
-| `index0.html` | 脱敏版正本（单文件，含全部内嵌图片） |
-| `.nojekyll` | 发布标记：跳过 Jekyll 处理，静态文件按原样输出 |
-| `.gitignore` | 白名单规则：仅放行上述文件，原始照片与文案草稿一律不推送 |
+| `index0.html` | 脱敏版正本（单文件，含全部内嵌图片），改页面改这里 |
+| `docs/index.html` | 线上发布入口，内容为 `index0.html` 的字节副本 |
+| `docs/.nojekyll` | 发布标记：跳过 Jekyll 处理，静态文件按原样输出 |
+| `.gitattributes` | 锁定换行，禁止 CRLF 转换，保证文件字节与线上一致 |
+| `.gitignore` | 白名单规则：仅放行上述文件；本地完整版与原始照片一律不推送 |
 
-> `index.html` 与 `index0.html` 是同一份内容的两个文件名。修改页面时请改 `index0.html`，再复制覆盖 `index.html`。
+> `index.html`（含租金与联系方式的完整版）只在本地保留，**不进本仓库**，由 `.gitignore` 排除。
 
 ## 本地预览
 
@@ -25,36 +26,38 @@
 
 **方式二：本地服务器（推荐，行为与线上一致）**
 
-在本目录执行：
-
 ```bash
 python -m http.server 8899 --bind 127.0.0.1
 ```
 
-然后访问 <http://127.0.0.1:8899/index0.html>。按 `Ctrl+C` 停止。
-
-若需验证根路径入口是否正常，访问 <http://127.0.0.1:8899/>（读取 `index.html`）。
+访问 <http://127.0.0.1:8899/index0.html>；验证根入口访问 <http://127.0.0.1:8899/docs/>。按 `Ctrl+C` 停止。
 
 ## 发布设置（GitHub Pages）
 
 | 项目 | 取值 |
 |---|---|
 | 发布仓库 | `lindatao1001/lindatao1001.github.io`（本地 remote 名 `pages`） |
+| 备份仓库 | `lindatao1001/my-first-website`（remote 名 `origin`，内容镜像） |
 | 分支 | `main` |
-| 发布目录 | `/`（根目录） |
+| 发布目录 | `/docs` |
 | 构建方式 | 分支部署（legacy），无需 Actions |
 | 自定义域名 | 无，使用默认 `lindatao1001.github.io` |
+
+> Pages 根路径只认 `index.html` 这个文件名，所以发布目录里必须放 `index.html`。
+> 它只是 `index0.html` 的字节副本，不含完整版信息。
 
 ## 更新流程
 
 ```bash
-# 1. 修改 index0.html 后同步根入口
-cp index0.html index.html
+# 1. 改 index0.html（脱敏版正本）
+# 2. 同步发布副本
+cp index0.html docs/index.html
 
-# 2. 提交并推送（Pages 只认 pages 远端的 main 分支）
+# 3. 提交并推送
 git add -A
 git commit -m "更新房源页"
 git push pages main
+git push origin main
 ```
 
 推送后 GitHub Pages 会自动构建，约 1 分钟内生效。
